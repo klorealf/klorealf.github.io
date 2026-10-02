@@ -1,0 +1,396 @@
+/* =========================================================
+   style.css — all the look and feel for the site
+   Tip: change a color once in :root and it updates everywhere
+   ========================================================= */
+
+/* ---------- 1. Design tokens (your brand in one place) ---------- */
+:root {
+  /* Colors */
+  --ink: #1F2A44;        /* deep indigo: headings and main text */
+  --ink-soft: #4A5570;   /* softer indigo: paragraphs */
+  --teal: #2A9D8F;       /* main accent: buttons, links, logo outline */
+  --teal-dark: #1E7A6F;  /* darker teal for hover states */
+  --lilac: #E9E4F7;      /* soft lilac: tinted sections, logo fill */
+  --blush: #F6D3DA;      /* soft pink: small highlights */
+  --paper: #FCFDFE;      /* almost-white page background: keeps it airy */
+  --line: #E3E6EE;       /* light gray borders */
+
+  /* Fonts */
+  --font-display: 'Bricolage Grotesque', 'Trebuchet MS', sans-serif;
+  --font-body: 'Figtree', 'Segoe UI', Arial, sans-serif;
+
+  /* Spacing: generous space = "airy" */
+  --space-section: clamp(4rem, 10vw, 7rem); /* grows with screen size */
+  --max-width: 68rem;                       /* content never gets too wide */
+  --radius: 14px;
+}
+
+/* ---------- 2. Base reset ---------- */
+/* box-sizing makes width calculations include padding (much easier) */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;     /* menu links glide instead of jumping */
+  scroll-padding-top: 5rem;    /* stops the sticky header covering section titles */
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink-soft);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;        /* about 17px: easy to read */
+  line-height: 1.65;           /* roomy line spacing */
+}
+
+img { max-width: 100%; display: block; }
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  color: var(--ink);
+  line-height: 1.15;
+  margin: 0 0 0.5em;
+}
+
+a { color: var(--teal-dark); }
+
+/* Clear outline when someone tabs through with a keyboard (accessibility) */
+:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Hides text visually but keeps it for screen readers */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* "Skip to content" link: hidden until focused with the keyboard */
+.skip-link {
+  position: absolute; left: 1rem; top: -3rem;
+  background: var(--ink); color: #fff; padding: 0.5rem 1rem;
+  border-radius: 8px; z-index: 100;
+}
+.skip-link:focus { top: 1rem; }
+
+/* ---------- 3. Header & navigation ---------- */
+.site-header {
+  position: sticky;            /* stays at the top while scrolling */
+  top: 0;
+  z-index: 50;                 /* sits above other content */
+  background: rgba(252, 253, 254, 0.88);
+  backdrop-filter: blur(10px); /* frosted-glass effect */
+  border-bottom: 1px solid var(--line);
+}
+
+.nav {
+  max-width: var(--max-width);
+  margin: 0 auto;              /* centers the nav */
+  padding: 0.75rem 1.5rem;
+  display: flex;               /* puts logo and links in a row */
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex; align-items: center; gap: 0.6rem;
+  text-decoration: none;
+  font-family: var(--font-display); font-weight: 700;
+  color: var(--ink); font-size: 1.125rem;
+}
+
+.nav-links {
+  list-style: none;            /* removes bullet points */
+  display: flex; gap: 0.25rem;
+  margin: 0; padding: 0;
+}
+
+.nav-links a {
+  display: block;
+  padding: 0.5rem 0.85rem;
+  border-radius: 999px;        /* pill shape */
+  text-decoration: none;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.nav-links a:hover { background: var(--lilac); color: var(--ink); }
+
+/* The link for the section you're currently viewing (set by script.js) */
+.nav-links a.active { color: var(--ink); background: var(--lilac); }
+
+.nav-links .nav-cta { background: var(--ink); color: #fff; }
+.nav-links .nav-cta:hover { background: var(--teal-dark); color: #fff; }
+
+/* Hamburger button: hidden on desktop */
+.menu-toggle {
+  display: none;
+  background: none; border: 0; padding: 0.75rem; cursor: pointer;
+}
+/* Draws three lines using one span plus ::before and ::after */
+.menu-icon, .menu-icon::before, .menu-icon::after {
+  display: block; width: 22px; height: 2px;
+  background: var(--ink); border-radius: 2px;
+  position: relative; transition: transform 0.2s;
+}
+.menu-icon::before, .menu-icon::after { content: ""; position: absolute; }
+.menu-icon::before { top: -7px; }
+.menu-icon::after  { top: 7px; }
+/* When the menu is open, turn the lines into an X */
+.menu-toggle[aria-expanded="true"] .menu-icon { background: transparent; }
+.menu-toggle[aria-expanded="true"] .menu-icon::before { transform: translateY(7px) rotate(45deg); }
+.menu-toggle[aria-expanded="true"] .menu-icon::after  { transform: translateY(-7px) rotate(-45deg); }
+
+/* ---------- 4. Buttons ---------- */
+.btn {
+  display: inline-block;
+  padding: 0.8rem 1.4rem;
+  border-radius: 999px;
+  font: 600 1rem var(--font-body);
+  text-decoration: none;
+  cursor: pointer;
+  border: 2px solid var(--teal);
+  transition: background 0.2s, color 0.2s;
+}
+.btn-primary { background: var(--teal); color: #fff; }
+.btn-primary:hover { background: var(--teal-dark); border-color: var(--teal-dark); }
+.btn-ghost { background: transparent; color: var(--teal-dark); }
+.btn-ghost:hover { background: var(--teal); color: #fff; }
+
+/* ---------- 5. Hero ---------- */
+.hero {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: clamp(3rem, 9vw, 6.5rem) 1.5rem var(--space-section);
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;  /* text column wider than the art */
+  gap: 3rem;
+  align-items: center;
+}
+
+.hero h1 {
+  font-size: clamp(2.3rem, 5.5vw, 4rem); /* shrinks on phones, big on desktop */
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  max-width: 16ch;             /* keeps the headline to a few balanced lines */
+}
+
+.lead { font-size: 1.2rem; max-width: 34em; margin: 0 0 2rem; }
+
+.hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+/* Molecule drawing */
+.hero-art { width: 100%; max-width: 340px; justify-self: center; }
+.hex { fill: none; stroke-width: 3; stroke-linejoin: round; }
+.hex-a { stroke: var(--teal); fill: rgba(233, 228, 247, 0.6); }
+.hex-b { stroke: #9C8FD0; }
+.hex-c { stroke: #E7A3B2; fill: rgba(246, 211, 218, 0.35); }
+.atom-teal  { fill: var(--teal); }
+.atom-blush { fill: #E7A3B2; }
+.atom-lilac { fill: #9C8FD0; }
+
+/* The one animation on the site: the molecule draws itself when the page loads */
+.hex {
+  stroke-dasharray: 400;        /* the outline is treated as one long dash */
+  stroke-dashoffset: 400;       /* start fully "undrawn" */
+  animation: draw 1.6s ease-out forwards;
+}
+.hex-b { animation-delay: 0.35s; }
+.hex-c { animation-delay: 0.7s; }
+.atom { opacity: 0; animation: appear 0.5s ease-out 1.4s forwards; }
+
+@keyframes draw   { to { stroke-dashoffset: 0; } }
+@keyframes appear { to { opacity: 1; } }
+
+/* People who turn off motion in their device settings see it finished instantly */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .hex, .atom { animation: none; stroke-dashoffset: 0; opacity: 1; }
+}
+
+/* ---------- 6. Sections ---------- */
+.section {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-section) 1.5rem;
+}
+.section h2 { font-size: clamp(1.9rem, 3.5vw, 2.6rem); letter-spacing: -0.01em; }
+.section-intro { font-size: 1.15rem; max-width: 38em; margin-top: 0; }
+
+/* Tinted sections: full-width lilac band behind the centered content */
+.section-tinted {
+  max-width: none;
+  background: var(--lilac);
+  padding-left: max(1.5rem, calc((100% - var(--max-width)) / 2 + 1.5rem));
+  padding-right: max(1.5rem, calc((100% - var(--max-width)) / 2 + 1.5rem));
+}
+
+/* ---------- 7. About ---------- */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+.about-text p { max-width: 38em; }
+
+.facts {
+  margin: 0;
+  padding: 1.5rem;
+  border-left: 4px solid var(--teal);
+  background: #fff;
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.facts div + div { margin-top: 1rem; } /* space between each fact */
+.facts dt { font-size: 0.85rem; color: var(--teal-dark); font-weight: 600; }
+.facts dd { margin: 0; color: var(--ink); font-weight: 500; }
+
+/* ---------- 8. Skills ---------- */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5rem;
+  margin-top: 2rem;
+}
+.skill-group h3 { font-size: 1.25rem; }
+.pills { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.pills li {
+  background: #fff;
+  color: var(--ink);
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+}
+
+/* ---------- 9. Projects ---------- */
+.projects {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+.project {
+  padding: 1.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+}
+/* The main project spans both columns so it stands out */
+.project-feature {
+  grid-column: 1 / -1;
+  border: 2px solid var(--teal);
+}
+.project-feature h3 { font-size: 1.6rem; }
+.project h3 { font-size: 1.3rem; margin-top: 0.75rem; }
+.project p { max-width: 40em; }
+
+.status {
+  display: inline-block;
+  font-size: 0.85rem; font-weight: 600;
+  padding: 0.2rem 0.7rem; border-radius: 999px;
+  background: var(--blush); color: #8A3A4C;
+}
+.status-live { background: #D5F0EC; color: var(--teal-dark); }
+
+.stack { font-size: 0.95rem; color: var(--teal-dark); font-weight: 500; }
+.project-link { font-weight: 600; }
+
+/* ---------- 9b. Live demo ---------- */
+.demo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;   /* inputs on the left, results on the right */
+  gap: 2rem;
+  margin-top: 2rem;
+  padding: 1.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+}
+.demo-inputs { display: flex; flex-direction: column; gap: 0.5rem; }
+.demo-inputs label { font-weight: 600; color: var(--ink); font-size: 0.95rem; }
+.demo-inputs textarea, .demo-inputs input {
+  font: 0.95rem/1.5 ui-monospace, Menlo, Consolas, monospace; /* code-style font lines up numbers */
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--ink);
+  background: var(--paper);
+  margin-bottom: 0.75rem;
+  width: 100%;
+}
+.demo-inputs .btn { align-self: flex-start; }
+.btn:disabled { opacity: 0.55; cursor: wait; }  /* faded while Python loads */
+
+.demo-output { overflow-x: auto; }   /* wide tables scroll inside the box on phones */
+.demo-output table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+.demo-output th, .demo-output td { text-align: left; padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--line); }
+.demo-output th:not(:first-child), .demo-output td:not(:first-child) { text-align: right; } /* numbers line up on the right */
+.demo-output thead th { color: var(--teal-dark); font-weight: 600; }
+.demo-output tfoot td { font-weight: 600; color: var(--ink); border-bottom: 0; }
+.demo-hint { color: var(--ink-soft); font-style: italic; }
+.demo-warn { color: #8A3A4C; background: var(--blush); padding: 0.6rem 0.8rem; border-radius: 8px; }
+
+.code-view { margin-top: 1.25rem; }
+.code-view summary { cursor: pointer; font-weight: 600; color: var(--teal-dark); }
+.code-view pre {
+  background: var(--ink); color: #E9E4F7;
+  padding: 1.25rem; border-radius: var(--radius);
+  overflow-x: auto;   /* long lines scroll sideways instead of breaking the page */
+  font-size: 0.85rem; line-height: 1.55;
+  max-height: 28rem;  /* tall code scrolls inside the box */
+}
+
+/* ---------- 10. Experience timeline ---------- */
+.timeline {
+  list-style: none;
+  margin: 2rem 0 0; padding: 0 0 0 1.75rem;
+  border-left: 2px solid #C9C0EA;   /* the vertical line */
+  max-width: 44rem;
+}
+.timeline li { position: relative; padding-bottom: 2rem; }
+.timeline li:last-child { padding-bottom: 0; }
+/* The dot on the line for each job */
+.timeline li::before {
+  content: "";
+  position: absolute; left: calc(-1.75rem - 7px); top: 0.35rem;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--teal); border: 3px solid var(--lilac);
+}
+.timeline h3 { font-size: 1.15rem; margin: 0.15rem 0 0.25rem; }
+.timeline p { margin: 0; }
+.when { font-size: 0.9rem; font-weight: 600; color: var(--teal-dark); }
+
+/* ---------- 11. Contact & footer ---------- */
+.contact { text-align: center; }
+.contact .section-intro { margin-left: auto; margin-right: auto; }
+.contact-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 1.5rem; }
+.copy-note { min-height: 1.5em; color: var(--teal-dark); font-weight: 500; }
+
+.site-footer {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.9rem;
+}
+
+/* ---------- 12. Phones and small tablets ---------- */
+@media (max-width: 800px) {
+  /* Show the hamburger, hide the link row until it's opened */
+  .menu-toggle { display: block; }
+  .nav-links {
+    display: none;
+    position: absolute; top: 100%; left: 0; right: 0;
+    flex-direction: column;
+    background: var(--paper);
+    padding: 0.75rem 1.5rem 1.25rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-links.open { display: flex; } /* script.js adds "open" on tap */
+  .nav-links a { padding: 0.75rem 1rem; }
+
+  /* Stack the two-column layouts into one column */
+  .hero, .about-grid, .skills-grid, .projects, .demo { grid-template-columns: 1fr; }
+  .hero-art { max-width: 220px; order: -1; justify-self: start; } /* art above the headline */
+  .hero { gap: 1.5rem; }
+}
